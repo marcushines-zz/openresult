@@ -1,0 +1,35 @@
+syntax="proto3"
+
+import "google/protobuf/any.proto";
+
+enum Operation {
+  UNKNOWN = 0;
+  EQUAL = 1;
+  NOT_EQUAL = 2;
+  GREATER_THAN = 3;
+  LESS_THAN = 4;
+  GREATER_THAN_EQUAL = 5;
+  LESS_THAN_EQUAL = 6;
+  IN = 7;
+  NOT_IN = 8;
+}
+
+message PointerProperty {
+  repeated string path = 1;
+}
+
+message Result {
+  repeated string path = 1;
+  string id = 2;
+  string uuid = 1;
+  uint64 timestamp = 2;
+  string text = 3;
+  // All operations are evaluated in the following order got op want.
+  // If op is not set or is UNKNOWN no comparison is done.
+  // If want is not set then no comparison is done.
+  Any got = 4;
+  Any want = 5;
+  Operation op = 6;
+  repeated Result results = 4;
+  map<string>Any property = 5;
+}
