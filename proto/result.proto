@@ -1,4 +1,4 @@
-syntax="proto3"
+syntax="proto3";
 
 import "google/protobuf/any.proto";
 
@@ -14,22 +14,33 @@ enum Operation {
   NOT_IN = 8;
 }
 
-message PointerProperty {
-  repeated string path = 1;
+// Path contains a list of nodes that make the unique path
+// to an value in the tree.
+message Path {
+  repeated string node = 1;
 }
 
 message Result {
-  repeated string path = 1;
-  string id = 2;
-  string uuid = 1;
-  uint64 timestamp = 2;
-  string text = 3;
+  // Path identifier of the result. The path only makes
+  // the result unique within it's own tree.
+  Path path = 1;
+  // Globally unique identifier of the result. Every
+  // result with a globally unique result should be
+  // indexable.
+  string uuid = 2;
+  // Timestamp in nanos since unix epoch.
+  uint64 timestamp = 3;
+  // text describes the result
+  string text = 4;
   // All operations are evaluated in the following order got op want.
   // If op is not set or is UNKNOWN no comparison is done.
   // If want is not set then no comparison is done.
-  Any got = 4;
-  Any want = 5;
-  Operation op = 6;
-  repeated Result results = 4;
-  map<string>Any property = 5;
+  google.protobuf.Any got = 5;
+  google.protobuf.Any want = 6;
+  Operation op = 7;
+  // Children results of the parent.
+  repeated Result results = 8;
+  // Arbitrary properties of the result.
+  map<string, google.protobuf.Any> property = 9;
 }
+
