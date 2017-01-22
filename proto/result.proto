@@ -20,20 +20,20 @@ message Path {
   repeated string node = 1;
 }
 
-message TestReport {
+message Report {
   string id = 1;
   repeated TestSuite test_suites = 2;
   string timestamp = 3;
 }
 
-message TestSuite {
+message Suite {
   string id = 1;
   repeated TestCase test_cases = 2;
   TestBed testbed = 3;
   map<string, google.protobuf.Any> meta = 4;
 }
 
-message TestCase {
+message Case {
   string id = 1;
   repeated Result results = 2;
   map<string, google.protobuf.Any> meta = 4;
