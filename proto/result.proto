@@ -20,6 +20,25 @@ message Path {
   repeated string node = 1;
 }
 
+message TestReport {
+  string id = 1;
+  repeated TestSuite test_suites = 2;
+  string timestamp = 3;
+}
+
+message TestSuite {
+  string id = 1;
+  repeated TestCase test_cases = 2;
+  TestBed testbed = 3;
+  map<string, google.protobuf.Any> meta = 4;
+}
+
+message TestCase {
+  string id = 1;
+  repeated Result results = 2;
+  map<string, google.protobuf.Any> meta = 4;
+}
+
 message Result {
   // Path identifier of the result. The path only makes
   // the result unique within it's own tree.
@@ -41,6 +60,5 @@ message Result {
   // Children results of the parent.
   repeated Result results = 8;
   // Arbitrary properties of the result.
-  map<string, google.protobuf.Any> property = 9;
+  map<string, google.protobuf.Any> meta = 9;
 }
-
