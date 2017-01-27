@@ -1,0 +1,69 @@
+syntax="proto3";
+
+import "google/protobuf/any.proto";
+
+package openresult;
+
+message LocalService {
+  string host = 1;
+  uint32 port = 2;
+}
+
+message WebService {
+  string url = 1;
+}
+
+message CloudService {
+  string endpoint = 2;
+}
+message Dependency {}
+
+message Service {
+  string id = 1;
+  string text = 2;
+  repeated Dependency dependencies = 3;
+  oneof type {
+    google.protobuf.Any external = 100;
+    LocalService local_service = 101;
+    WebService web_service = 102;
+    CloudService cloud_service = 103;
+  }
+}
+
+message IPv4 {
+  string address = 1;
+  uint32 prefix = 2;
+}
+
+message IPv6 {
+  string address = 1;
+  uint32 prefix = 2;
+}
+
+message ISO {
+  string address = 1;
+}
+
+message Address {
+  oneof type {
+    IPv4 ipv4 = 1;
+    IPv6 ipv6 = 2;
+    ISO iso = 3;
+  }
+}
+message Interface {
+  string id = 1;
+  repeated Address addresses = 2;
+}
+
+message Device {
+  string id = 1;
+  repeated Interface interface = 2;
+}
+
+// Testbed stores the system under test.
+message Testbed {
+  repeated Service services = 1;
+  repeated Device devices = 2;
+  repeated Device hosts = 3;
+}

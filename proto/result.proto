@@ -1,6 +1,9 @@
 syntax="proto3";
 
 import "google/protobuf/any.proto";
+import "github.com/marcushines/openresult/proto/testbed.proto";
+
+package openresult;
 
 enum Operation {
   UNKNOWN = 0;
@@ -14,6 +17,19 @@ enum Operation {
   NOT_IN = 8;
 }
 
+// Value stores the scalar value of different understood types by the Report.
+message Value {
+  oneof value {
+    int64 int_value = 1;
+    double double_value = 2;
+    string string_value = 3;
+    bool bool_value = 4;
+    bytes byte_value = 5;
+    google.protobuf.Any any_value = 6;
+    bytes json_value = 7;
+  }
+}
+
 // Path contains a list of nodes that make the unique path
 // to an value in the tree.
 message Path {
@@ -22,21 +38,22 @@ message Path {
 
 message Report {
   string id = 1;
-  repeated TestSuite test_suites = 2;
+  repeated Suite test_suites = 2;
   string timestamp = 3;
 }
 
 message Suite {
   string id = 1;
-  repeated TestCase test_cases = 2;
-  TestBed testbed = 3;
-  map<string, google.protobuf.Any> meta = 4;
+  repeated Case test_cases = 2;
+  Testbed testbed = 3;
+  map<string, Value> meta = 4;
 }
 
 message Case {
   string id = 1;
-  repeated Result results = 2;
-  map<string, google.protobuf.Any> meta = 4;
+  string text = 2;
+  repeated Result results = 3;
+  map<string, Value> meta = 4;
 }
 
 message Result {
@@ -49,16 +66,18 @@ message Result {
   string uuid = 2;
   // Timestamp in nanos since unix epoch.
   uint64 timestamp = 3;
+  // Duration of result in nano seconds.
+  uint64 duration = 4;
   // text describes the result
-  string text = 4;
+  string text = 5;
   // All operations are evaluated in the following order got op want.
   // If op is not set or is UNKNOWN no comparison is done.
   // If want is not set then no comparison is done.
-  google.protobuf.Any got = 5;
-  google.protobuf.Any want = 6;
-  Operation op = 7;
+  Value got = 6;
+  Value want = 7;
+  Operation op = 8;
   // Children results of the parent.
-  repeated Result results = 8;
+  repeated Result results = 9;
   // Arbitrary properties of the result.
-  map<string, google.protobuf.Any> meta = 9;
+  map<string, google.protobuf.Any> meta = 10;
 }
